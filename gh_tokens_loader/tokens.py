@@ -85,7 +85,18 @@ def load_gh_tokens(
 
 
 class GitHubTokensCycler:
-    """Cycle through tokens."""
+    """
+    Auto-refreshing tokens cycler.
+
+    Parameters
+    ----------
+    gh_tokens_file : os.PathLike | str | Path, optional
+        Path to the YAML file containing GitHub Tokens, by default ".github-tokens.yaml"
+    refresh_every_n : int, optional
+        Refresh tokens every n cycles, by default 1024
+    kwargs: dict[str, bool]
+        Extra keyword arguments to pass to load_gh_tokens
+    """
     def __init__(
         self: "GitHubTokensCycler",
         gh_tokens_file: os.PathLike | str | Path = ".github-tokens.yaml",
