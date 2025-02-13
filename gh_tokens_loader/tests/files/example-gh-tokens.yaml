@@ -1,0 +1,18 @@
+tokens:
+  eva:
+    token: "github_pat_56..."
+    expiration_date: null
+  izzy:
+    token: "github_pat_41..."
+    expiration_date: "2026-02-13"
+  soham:
+    token: "ghp_VeaD3..."
+    expiration_date: null
+  isaac:
+    token: "ghp_VVv5E..."
+    expiration_date: "2023-02-13"
+  bad_exp_date:
+    token: "ghp_abcde..."
+    expiration_date: "2asd3"
+  no_expr:
+    token: "ghp_efghi..."
