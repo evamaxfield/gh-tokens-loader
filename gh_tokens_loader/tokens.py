@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-from itertools import cycle
-
 import os
-from pathlib import Path
 from datetime import datetime
+from itertools import cycle
+from pathlib import Path
 
 import msgspec
 
 from .types import MultipleTokenDetails
 
 ###############################################################################
+
 
 def load_gh_tokens(
     gh_tokens_file: os.PathLike | str | Path = ".github-tokens.yaml",
@@ -28,7 +28,8 @@ def load_gh_tokens(
     return_all : bool, optional
         Return all tokens, by default False (only return non-expired tokens)
     strict_date_parsing : bool, optional
-        Use strict date parsing, by default False (skip token if expiration date would raise an error)
+        Use strict date parsing, by default False
+        (skip token if expiration date would raise an error)
     report_expired : bool, optional
         Report how many tokens are expired, by default True
 
@@ -97,11 +98,12 @@ class GitHubTokensCycler:
     kwargs: dict[str, bool]
         Extra keyword arguments to pass to load_gh_tokens
     """
+
     def __init__(
         self: "GitHubTokensCycler",
         gh_tokens_file: os.PathLike | str | Path = ".github-tokens.yaml",
         refresh_every_n: int = 1024,
-        **kwargs: dict[str, bool],
+        **kwargs: bool,
     ):
         # Load tokens
         self._gh_tokens_file = gh_tokens_file
@@ -117,18 +119,25 @@ class GitHubTokensCycler:
         self._counter = 0
 
     def __len__(self) -> int:
+        """Get the number of stored tokens."""
         return len(self._gh_tokens)
-    
+
     def _get_next_token(self) -> str:
         if self._counter % self._refresh_every_n == 0:
             self._load_tokens()
-        
+
         # Increment counter
         self._counter += 1
         return next(self._cycled_tokens)
 
-    def __next__(self):
+    def __next__(self) -> str:
+        """
+        Get the next token.
+
+        Will occasionally refresh tokens.
+        """
         return self._get_next_token()
-    
-    def __iter__(self):
+
+    def __iter__(self) -> "GitHubTokensCycler":
+        """Return self as the iterator."""
         return self

@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 
-from gh_tokens_loader import load_gh_tokens, GitHubTokensCycler
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 import pytest
+
+from gh_tokens_loader import GitHubTokensCycler, load_gh_tokens
 
 from .conftest import EXAMPLE_GH_TOKENS_FILE
 
@@ -11,6 +15,7 @@ from .conftest import EXAMPLE_GH_TOKENS_FILE
 # it is hard to manage due to the msgspec struct having datetime parsing from strings
 
 ###############################################################################
+
 
 def test_load_gh_tokens_default() -> None:
     """Test load_gh_tokens with default arguments."""
@@ -22,6 +27,7 @@ def test_load_gh_tokens_default() -> None:
         "ghp_VeaD3...",
         "ghp_efghi...",
     }
+
 
 def test_load_gh_tokens_all() -> None:
     """Test load_gh_tokens with all tokens."""
@@ -36,10 +42,12 @@ def test_load_gh_tokens_all() -> None:
         "ghp_efghi...",
     }
 
+
 def test_load_gh_tokens_strict_dates() -> None:
     """Test load_gh_tokens with strict date parsing."""
     with pytest.raises(ValueError, match="Error parsing date"):
         load_gh_tokens(EXAMPLE_GH_TOKENS_FILE, strict_date_parsing=True)
+
 
 def test_tokens_cycler() -> None:
     """Test GitHubTokensCycler."""
@@ -54,14 +62,49 @@ def test_tokens_cycler() -> None:
 
     assert len(seen_tokens) == 4
 
+
 def test_tokens_cycler_refresh() -> None:
     """Test GitHubTokensCycler refresh."""
     cycler = GitHubTokensCycler(EXAMPLE_GH_TOKENS_FILE, refresh_every_n=2)
 
     # First cycle of two
     first_cycle = {next(cycler) for _ in range(2)}
-    
+
     # Second cycle of two
     second_cycle = {next(cycler) for _ in range(2)}
 
     assert first_cycle == second_cycle
+
+
+def smoke_test_readme_example() -> None:
+    # Load tokens
+    gh_tokens_cycler = GitHubTokensCycler("path/to/tokens.yaml")
+
+    # Imagine some function that uses the GitHub API
+    def get_repo_data(repo: str, gh_token: str) -> dict:
+        # Important to sleep to avoid rate limits
+        time.sleep(1)
+
+        # Use the token to get data from the GitHub API
+        # ...
+        # Return the data
+        return {"repo": repo, "token": gh_token}
+
+    # Imagine some list of repos
+    repos = ["repo1", "repo2", "repo3", "..."]
+
+    # Thread with cycling tokens
+    with ThreadPoolExecutor(max_workers=len(gh_tokens_cycler)) as exe:
+        results = list(
+            exe.map(
+                get_repo_data,
+                repos,
+                [next(gh_tokens_cycler) for _ in range(len(repos))],
+            )
+        )
+
+    # Assert that we have 4 results
+    assert len(results) == 4
+
+    # Assert that all tokens were used
+    assert len({result["token"] for result in results}) == 4

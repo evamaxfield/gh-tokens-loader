@@ -10,6 +10,12 @@ except PackageNotFoundError:
 __author__ = "Eva Maxfield Brown"
 __email__ = "evamaxfieldbrown@gmail.com"
 
-from .tokens import load_gh_tokens, GitHubTokensCycler
+from .tokens import GitHubTokensCycler, load_gh_tokens
 
-__all__ = ["__version__", "__author__", "__email__", "load_gh_tokens", "GitHubTokensCycler",]
+__all__ = [
+    "GitHubTokensCycler",
+    "__author__",
+    "__email__",
+    "__version__",
+    "load_gh_tokens",
+]
