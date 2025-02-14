@@ -33,7 +33,7 @@ Each token has a short name (generally who or what it is linked to), the token i
 To load the tokens from the file, use the following code:
 
 ```python
-from github_tokens_loader import load_github_tokens
+from gh_tokens_loader import load_github_tokens
 
 tokens = load_github_tokens("path/to/tokens.yaml")
 ```
@@ -50,7 +50,7 @@ In my own usage, I generally use the `GitHubTokensCycler` that is also builtin t
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from github_tokens_loader import GitHubTokensCycler
+from gh_tokens_loader import GitHubTokensCycler
 
 # Load tokens
 gh_tokens_cycler = GitHubTokensCycler("path/to/tokens.yaml")
