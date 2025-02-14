@@ -10,16 +10,16 @@ To use this library, create a file with the following structure:
 
 ```yaml
 tokens:
-  eva:
+  jane:
     token: "github_pat_56..."
     expiration_date: null
-  izzy:
+  john:
     token: "github_pat_41..."
     expiration_date: "2026-02-13"
-  soham:
+  bob:
     token: "ghp_VeaD3..."
     expiration_date: null
-  isaac:
+  sally:
     token: "ghp_VVv5E..."
     expiration_date: "2023-02-13"
 ```
@@ -42,9 +42,9 @@ This will return only the tokens that are valid (i.e., not expired).
 
 ## Why
 
-I am a researcher who spends a lot of time mining the GitHub API for data about scientific software. Due to the rate limits on the GitHub API, other researchers in my department commonly share their tokens with me to help me get the data I need. I found myself copy pasting some form of this code around to different projects and decided to make it a library.
+I am a researcher who spends a lot of time mining the GitHub API for data about scientific software. Due to the rate limits on the GitHub API, my research collaborators and I will commonly pool our tokens. I found myself copy pasting some form of this code around to different projects and decided to make it a library.
 
-In my own usage, I generally use the GitHubTokensCycler that is also builtin to the library:
+In my own usage, I generally use the `GitHubTokensCycler` that is also builtin to the library:
 
 ```python
 import time
